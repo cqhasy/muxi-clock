@@ -1,6 +1,7 @@
 package temp
 
 import (
+	"fmt"
 	"go_clock/model/task"
 	"go_clock/store"
 )
@@ -35,7 +36,11 @@ func (m *MapStore) GetTaskMapStore() *TaskMapStore {
 }
 
 func (m *MapStore) Get(key string) (store.Entity, error) {
-	return store.Entity{}, nil
+	ta, err := m.GetTaskMapStore().Get(key)
+	if err != nil {
+		return store.Entity{}, err
+	}
+	return store.Entity{Data: ta}, nil
 }
 
 func (m *MapStore) Create(val store.Entity) error {
@@ -51,7 +56,15 @@ func (m *MapStore) Delete(key string) error {
 }
 
 func (m *MapStore) Update(key string, val store.Entity) (store.Entity, error) {
-	return store.Entity{}, nil
+	if val.Data == nil {
+		return store.Entity{}, fmt.Errorf("val.Data is nil")
+	}
+	d, ok := val.Data.(task.Task)
+	if ok {
+		m.TaskMap.Update(d)
+		return store.Entity{}, nil
+	}
+	return store.Entity{}, fmt.Errorf("val.Data is not task")
 }
 
 func (m *MapStore) Custom(fn func() (interface{}, error)) (interface{}, error) {

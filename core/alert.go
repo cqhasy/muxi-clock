@@ -38,6 +38,11 @@ func (m *MuxiAlertImpl) Execute() {
 						time.Sleep(time.Duration(AlertTicker) * time.Second)
 					}
 				}(ta)
+				ta.Status = task.Finished
+				_, err = m.Obj.UpdateTask(ta.ID, ta)
+				if err != nil {
+					log.Println("update task err:", err)
+				}
 			}
 			time.Sleep(time.Duration(AlertTicker) * time.Second)
 		}

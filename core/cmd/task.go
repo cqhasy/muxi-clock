@@ -54,6 +54,7 @@ func (tc *TaskCmd) AddCreateCmd() {
 				TaskContent:  content,
 				AlertContent: alert,
 				TimeStamp:    taskTime.Unix(),
+				Status:       task.Planning,
 			})
 			if err != nil {
 				return fmt.Errorf("db create task err: %v", err)

@@ -47,6 +47,7 @@ func (ms *TaskMapStore) Update(ta task.Task) error {
 		if ta.TimeStamp != 0 {
 			da.TimeStamp = ta.TimeStamp
 		}
+		da.Status = ta.Status
 		ms.m[da.ID] = da
 		return nil
 	}

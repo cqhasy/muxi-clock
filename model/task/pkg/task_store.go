@@ -57,11 +57,11 @@ func (t *TaskStoreImpl) UpdateTask(id string, ta task.Task) (task.Task, error) {
 		return task.Task{}, err
 	}
 	re.Data = ta
-	ne, err := t.Dao.Update(id, re)
+	_, err = t.Dao.Update(id, re)
 	if err != nil {
 		return task.Task{}, err
 	}
-	return ne.Data.(task.Task), nil
+	return task.Task{}, nil
 }
 
 func (t *TaskStoreImpl) DeleteTask(id string) error {
@@ -124,8 +124,7 @@ func (t *TaskStoreImpl) GetDeadLineTasks(timeStamp int64) ([]task.Task, error) {
 
 	var results []task.Task
 	for _, v := range data {
-		fmt.Printf("timeStamp=%d, endTime=%d, v.TimeStamp=%d\n", timeStamp, endTime, v.TimeStamp)
-		if v.TimeStamp > timeStamp && v.TimeStamp < endTime {
+		if v.TimeStamp > timeStamp && v.TimeStamp < endTime && v.Status == task.Planning {
 			results = append(results, v)
 		}
 	}
